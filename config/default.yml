@@ -1,0 +1,5 @@
+
+Style/PublicMethodDocumentation:
+  Description: 'TODO: Write a description of the cop.'
+  Enabled: true
+  VersionAdded: '0.2.0'
