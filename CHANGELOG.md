@@ -1,0 +1,2 @@
+## New features
+* Style/PublicMethodDocumentation

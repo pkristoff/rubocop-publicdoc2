@@ -1,0 +1,17 @@
+# Write it!
+
+Style/PublicMethodDocumentation:
+  Description: 'check public methods to have correct documentation'
+  Enabled: pending
+  VersionAdded: '0.1.0'
+
+Style/PublicClassDocumentation:
+  Description: 'check classes have correct documentation'
+  Enabled: pending
+  VersionAdded: '0.1.0'
+
+# this added to allow tests to work
+Style/CommentAnnotation:
+  Keywords: []
+  Enabled: false
+
