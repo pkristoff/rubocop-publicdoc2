@@ -39,6 +39,8 @@ module RuboCop
 
         MSG_ATTRIBUTES_AND_PARAMETERS_NO_COEXIST = 'Attributes and Parameters should not exist on same method.'
         MSG_DESCRIPTION_SHOULD_END_WITH_BLANK_COMMENT = 'Description should end with blank comment.'
+        MSG_ILLEGAL_RANGE_BODY_FORMAT = "Illegal %s format: '# * <tt>:{argument}</tt> {description}'."
+        MSG_ILLEGAL_RANGE_RET_BODY_FORMAT = "Illegal %s format: '# * <tt>{CLASS}</tt> {description}'."
         MSG_MISSING_DOCUMENTATION = 'Missing public method documentation comment for `%s`.'
         MSG_MISSING_PARAMETERS = 'Parameter is missing for `%s`.'
         MSG_PARAMETERS_ARG_NAME_MISMATCH = 'Parameter name `%s` does not match argument name `%s`.'
@@ -46,11 +48,13 @@ module RuboCop
         MSG_PARAMETERS_SHOULD_BE_BEFORE_RETURNS = 'Parameters should be before Returns.'
         MSG_RANGE_BODY_EMPTY = '%s body is empty.'
         MSG_RETURNS_SHOULD_BE_LAST = 'Returns should be last.'
+        MSG_UNNECESSARY_PARAMETERS = 'Unnecessary Parameter documentation for `%s`.'
 
         #   https://regex101.com/
         ATTR_REGEXP = /^ *# *=== *Attributes:/.freeze
         DOC_PARM_REGEXP = %r{^# \* <tt>:(\w+)</tt>}.freeze
         DOC_RET_REGEXP = %r{^# \* <tt>([:\w]+)</tt>}.freeze
+        DOC_SUB_PARM_REGEXP = %r{^# \** <code>([.:\w ]+-*[.:\w ]+)</code>([.:\w ]*-*[.:\w ]*)}.freeze
         PARMS_REGEXP = /^ *# *=== *Parameters:/.freeze
         RETURNS_REGEXP = /^ *# *=== *Returns: */.freeze
 
@@ -120,6 +124,7 @@ module RuboCop
           grd = attrs_range.missing? || parameters_range.missing?
           add_offense(attrs_range.start_comment, message: MSG_ATTRIBUTES_AND_PARAMETERS_NO_COEXIST) unless grd
 
+          # copied from documentation_comment.rb
           special_comm = preceding_lines.any? do |comment|
             !AnnotationComment.new(comment, annotation_keywords).annotation? &&
               !interpreter_directive_comment?(comment) &&
