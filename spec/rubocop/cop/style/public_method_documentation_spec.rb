@@ -54,6 +54,19 @@ RSpec.describe RuboCop::Cop::Style::PublicMethodDocumentation, :config do
         end
       RUBY
     end
+    it 'rubocop directive' do
+      expect_offense(<<~RUBY)
+        # class doc
+        #
+        class Admin < ApplicationRecord
+          # rubocop:disable Layout/LineLength
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Parameter is missing for `xxx`.
+          #
+          def xxx(p1, p2)
+          end
+        end
+      RUBY
+    end
     it 'Missing parm comment' do
       expect_offense(<<~RUBY)
         # class doc

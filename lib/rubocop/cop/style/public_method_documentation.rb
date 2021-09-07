@@ -41,6 +41,7 @@ module RuboCop
         MSG_DESCRIPTION_SHOULD_END_WITH_BLANK_COMMENT = 'Description should end with blank comment.'
         MSG_ILLEGAL_RANGE_BODY_FORMAT = "Illegal %s format: '# * <tt>:{argument}</tt> {description}'."
         MSG_ILLEGAL_RANGE_RET_BODY_FORMAT = "Illegal %s format: '# * <tt>{CLASS}</tt> {description}'."
+        MSG_INVALID_DOCUMENTATION = 'Invalid public method documentation comment for `%s`.'
         MSG_MISSING_DOCUMENTATION = 'Missing public method documentation comment for `%s`.'
         MSG_MISSING_PARAMETERS = 'Parameter is missing for `%s`.'
         MSG_PARAMETERS_ARG_NAME_MISMATCH = 'Parameter name `%s` does not match argument name `%s`.'
@@ -125,13 +126,13 @@ module RuboCop
           add_offense(attrs_range.start_comment, message: MSG_ATTRIBUTES_AND_PARAMETERS_NO_COEXIST) unless grd
 
           # copied from documentation_comment.rb
-          special_comm = preceding_lines.any? do |comment|
+          not_special_comm = preceding_lines(node) do |comment|
             !AnnotationComment.new(comment, annotation_keywords).annotation? &&
               !interpreter_directive_comment?(comment) &&
               !rubocop_directive_comment?(comment)
           end
 
-          return add_offense(preceding_lines[index], message: MSG_INVALID_DOCUMENTATION) unless special_comm
+          return add_offense(preceding_lines(node)[0], message: MSG_INVALID_DOCUMENTATION) unless not_special_comm
 
           add_offense(parameters_range.start_comment, message: MSG_PARAMETERS_SHOULD_BE_BEFORE_RETURNS) unless guard
 
